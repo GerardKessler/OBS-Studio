@@ -15,8 +15,30 @@ from threading import Thread
 
 class AppModule(appModuleHandler.AppModule):
 
+	fg = ""
+	sources = ""
+	audio = ""
+	status = ""
 	appsKey = KeyboardInputGesture.fromName("applications")
 	downArrow = KeyboardInputGesture.fromName("downArrow")
+	tab = KeyboardInputGesture.fromName("tab")
+
+	def event_NVDAObject_init(self, obj):
+		self.fg = api.getForegroundObject()
+		if obj == self.fg:
+			self.tab.send()
+
+
+	def windowObjects(self):
+		if self.sources == "":
+			self.tab.send()
+			for child in self.fg.children:
+				if child.UIAAutomationId == 'OBSBasic.sourcesDock':
+					self.sources = child
+				elif child.UIAAutomationId == 'OBSBasic.mixerDock':
+					self.audio = child
+				elif child.UIAAutomationId == 'OBSBasic.statusbar':
+					self.status = child
 
 	@script(
 category="OBS Studio",
@@ -51,10 +73,12 @@ gesture="kb:control+p"
 		self. buttonSelect(6)
 
 	def buttonSelect(self, button):
-		fg = api.getForegroundObject()
-		obj = fg.lastChild.children[0].children[button]
-		obj.doAction()
-		Thread(target=self.mute, args=(obj.name,)).start()
+		try:
+			obj = self.fg.lastChild.children[0].children[button]
+			obj.doAction()
+			Thread(target=self.mute, args=(obj.name,)).start()
+		except IndexError:
+			pass
 
 	@script(
 		category="OBS Studio",
@@ -63,13 +87,9 @@ gesture="kb:control+p"
 	)
 	def script_fuente(self, gesture):
 		x = int(gesture.mainKeyName) - 1
-		fg = api.getForegroundObject()
-		for child in fg.children:
-			if child.UIAAutomationId == 'OBSBasic.sourcesDock':
-				fuentesWindow = child
-				break
+		self.windowObjects()
 		try:
-			obj = fuentesWindow.children[0].children[0].children[0].children[x]
+			obj = self.sources.children[0].children[0].children[0].children[x]
 			api.moveMouseToNVDAObject(obj)
 			winUser.mouse_event(winUser.MOUSEEVENTF_LEFTDOWN,0,0,None,None)
 			winUser.mouse_event(winUser.MOUSEEVENTF_LEFTUP,0,0,None,None)
@@ -83,12 +103,8 @@ gesture="kb:control+p"
 		gesture="kb:control+n"
 	)
 	def script_nuevaFuente(self, gesture):
-		fg = api.getForegroundObject()
-		for child in fg.children:
-			if child.UIAAutomationId == 'OBSBasic.sourcesDock':
-				fuentesWindow = child
-				break
-		add = fuentesWindow.firstChild.firstChild.firstChild.next.firstChild
+		self.windowObjects()
+		add = self.sources.firstChild.firstChild.firstChild.next.firstChild
 		api.moveMouseToNVDAObject(add)
 		winUser.mouse_event(winUser.MOUSEEVENTF_LEFTDOWN,0,0,None,None)
 		winUser.mouse_event(winUser.MOUSEEVENTF_LEFTUP,0,0,None,None)
@@ -104,13 +120,9 @@ gesture="kb:control+p"
 	)
 	def script_audio(self, gesture):
 		key = int(gesture.mainKeyName) - 1
-		fg = api.getForegroundObject()
-		for child in fg.children:
-			if child.UIAAutomationId == 'OBSBasic.mixerDock':
-				audioWindow = child
-				break
+		self.windowObjects()
 		try:
-			obj = audioWindow.firstChild.firstChild.firstChild.firstChild.firstChild.children[key].firstChild
+			obj = self.audio.firstChild.firstChild.firstChild.firstChild.firstChild.children[key].firstChild
 			obj.setFocus()
 			Thread(target=self.mute, args=(obj.next.name,)).start()
 		except IndexError:
@@ -128,12 +140,8 @@ gesture="kb:control+p"
 		gesture="kb:control+shift+r"
 	)
 	def script_statusRecord(self, gesture):
-		fg = api.getForegroundObject()
-		for child in fg.children:
-			if child.UIAAutomationId == 'OBSBasic.statusbar':
-				estadoWindow = child
-				break
-		timeRecord = estadoWindow.children[6].name
+		self.windowObjects()
+		timeRecord = self.status.children[6].name
 		msg(timeRecord)
 
 	@script(
@@ -142,10 +150,17 @@ gesture="kb:control+p"
 		gesture="kb:control+shift+t"
 	)
 	def script_statusTransmission(self, gesture):
-		fg = api.getForegroundObject()
-		for child in fg.children:
-			if child.UIAAutomationId == 'OBSBasic.statusbar':
-				estadoWindow = child
-				break
-		timeRecord = estadoWindow.children[4].name
+		self.windowObjects()
+		timeRecord = self.status.children[4].name
 		msg(timeRecord)
+
+	@script(
+		category="OBS Studio",
+		description="Enfoca el panel de botones",
+		gesture="kb:control+tab"
+	)
+	def script_buttonsFocus(self, gesture):
+		try:
+			self.fg.lastChild.firstChild.firstChild.setFocus()
+		except AttributeError:
+			pass
