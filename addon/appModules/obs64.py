@@ -26,6 +26,7 @@ class AppModule(appModuleHandler.AppModule):
 	appsKey = KeyboardInputGesture.fromName("applications")
 	downArrow = KeyboardInputGesture.fromName("downArrow")
 	tab = KeyboardInputGesture.fromName("tab")
+	category = "OBS Studio"
 
 	def event_NVDAObject_init(self, obj):
 		self.fg = api.getForegroundObject()
@@ -33,49 +34,52 @@ class AppModule(appModuleHandler.AppModule):
 	def windowObjects(self):
 		if self.sources == "":
 			self.tab.send()
-			for child in self.fg.children:
-				if child.UIAAutomationId == 'OBSBasic.sourcesDock':
-					self.sources = child
-				elif child.UIAAutomationId == 'OBSBasic.mixerDock':
-					self.audio = child
-				elif child.UIAAutomationId == 'OBSBasic.statusbar':
-					self.status = child
+			try:
+				for child in self.fg.children:
+					if child.UIAAutomationId == 'OBSBasic.sourcesDock':
+						self.sources = child
+					elif child.UIAAutomationId == 'OBSBasic.mixerDock':
+						self.audio = child
+					elif child.UIAAutomationId == 'OBSBasic.statusbar':
+						self.status = child
+			except AttributeError:
+				pass
 
 	@script(
-		category="OBS Studio",
+		category=category,
 		# Translators: Descripción del elemento en el diálogo gestos de entrada
 		description= _('Pulsa el botón Iniciar transmisión'),
 		gesture="kb:control+t"
 	)
 	def script_transmision(self, gesture):
-		self. buttonSelect(0)
+		self.buttonSelect(0)
 
 	@script(
-		category="OBS Studio",
+		category=category,
 		#Translators: Descripción del elemento en el diálogo gestos de entrada
 		description= _('Pulsa el botón Iniciar grabación'),
 		gesture="kb:control+r"
 	)
 	def script_grabacion(self, gesture):
-		self. buttonSelect(1)
+		self.buttonSelect(1)
 
 	@script(
-		category="OBS Studio",
+		category=category,
 		# Translators: Descripción del elemento en el diálogo gestos de entrada
 		description= _('Pulsa el botón ajustes'),
 		gesture="kb:control+a"
 	)
 	def script_ajustes(self, gesture):
-		self. buttonSelect(3)
+		self.buttonSelect(3)
 
 	@script(
-		category="OBS Studio",
+		category=category,
 		# Translators: Descripción del elemento en el diálogo gestos de entrada
 		description= _('Pulsa el botón pausar grabación'),
 		gesture="kb:control+p"
 	)
 	def script_pausar(self, gesture):
-		self. buttonSelect(6)
+		self.buttonSelect(6)
 
 	def buttonSelect(self, button):
 		try:
@@ -95,12 +99,12 @@ class AppModule(appModuleHandler.AppModule):
 			winUser.mouse_event(winUser.MOUSEEVENTF_LEFTDOWN,0,0,None,None)
 			winUser.mouse_event(winUser.MOUSEEVENTF_LEFTUP,0,0,None,None)
 			Thread(target=self.mute, args=(obj.name,)).start()
-		except IndexError:
+		except (IndexError, AttributeError):
 			# Translators: Anuncia que no hay fuentes seleccionadas
 			message(_('Sin fuente asignada'))
 
 	@script(
-		category="OBS Studio",
+		category=category,
 		# Translators: Descripción del elemento en el diálogo gestos de entrada
 		description= _('Crea una nueva fuente'),
 		gesture="kb:control+n"
@@ -135,7 +139,7 @@ class AppModule(appModuleHandler.AppModule):
 		message(str)
 
 	@script(
-		category="OBS Studio",
+		category=category,
 		# Translators: Descripción del elemento en el diálogo gestos de entrada
 		description= _('Verbaliza el tiempo  grabado'),
 		gesture="kb:control+shift+r"
@@ -146,7 +150,7 @@ class AppModule(appModuleHandler.AppModule):
 		message(timeRecord)
 
 	@script(
-		category="OBS Studio",
+		category=category,
 		# Translators: Descripción del elemento en el diálogo gestos de entrada
 		description= _('Verbaliza el tiempo transmitido'),
 		gesture="kb:control+shift+t"
@@ -157,13 +161,13 @@ class AppModule(appModuleHandler.AppModule):
 		message(timeRecord)
 
 	@script(
-		category="OBS Studio",
+		category=category,
 		# Translators: Descripción del elemento en el diálogo gestos de entrada
-		description= _('Enfoca el panel de botones'),
+		description= _('Enfoca el panel de botones si es posible'),
 		gesture="kb:control+tab"
 	)
 	def script_buttonsFocus(self, gesture):
 		try:
 			self.fg.lastChild.firstChild.firstChild.setFocus()
-		except AttributeError:
+		except (AttributeError, IndexError):
 			pass
