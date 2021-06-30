@@ -146,8 +146,11 @@ class AppModule(appModuleHandler.AppModule):
 	)
 	def script_statusRecord(self, gesture):
 		self.windowObjects()
-		timeRecord = self.status.children[6].name
-		message(timeRecord)
+		try:
+			timeRecord = self.status.children[6].name
+			message(timeRecord)
+		except AttributeError:
+			pass
 
 	@script(
 		category=category,
@@ -157,8 +160,11 @@ class AppModule(appModuleHandler.AppModule):
 	)
 	def script_statusTransmission(self, gesture):
 		self.windowObjects()
-		timeRecord = self.status.children[4].name
-		message(timeRecord)
+		try:
+			timeRecord = self.status.children[4].name
+			message(timeRecord)
+		except AttributeError:
+			pass
 
 	@script(
 		category=category,
