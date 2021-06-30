@@ -8,10 +8,14 @@ import api
 import controlTypes
 from time import sleep
 import winUser
-from ui import message as msg
+from ui import message
 import speech
 from keyboardHandler import KeyboardInputGesture
 from threading import Thread
+import addonHandler
+
+# Lína de traducción
+addonHandler.initTranslation()
 
 class AppModule(appModuleHandler.AppModule):
 
@@ -25,9 +29,6 @@ class AppModule(appModuleHandler.AppModule):
 
 	def event_NVDAObject_init(self, obj):
 		self.fg = api.getForegroundObject()
-		if obj == self.fg:
-			self.tab.send()
-
 
 	def windowObjects(self):
 		if self.sources == "":
@@ -41,34 +42,38 @@ class AppModule(appModuleHandler.AppModule):
 					self.status = child
 
 	@script(
-category="OBS Studio",
-description="Pulsa el botón Iniciar transmisión",
-gesture="kb:control+t"
-)
+		category="OBS Studio",
+		# Translators: Descripción del elemento en el diálogo gestos de entrada
+		description= _('Pulsa el botón Iniciar transmisión'),
+		gesture="kb:control+t"
+	)
 	def script_transmision(self, gesture):
 		self. buttonSelect(0)
 
 	@script(
-category="OBS Studio",
-description="Pulsa el botón Iniciar grabación",
-gesture="kb:control+r"
-)
+		category="OBS Studio",
+		#Translators: Descripción del elemento en el diálogo gestos de entrada
+		description= _('Pulsa el botón Iniciar grabación'),
+		gesture="kb:control+r"
+	)
 	def script_grabacion(self, gesture):
 		self. buttonSelect(1)
 
 	@script(
-category="OBS Studio",
-description="Pulsa el botón ajustes",
-gesture="kb:control+a"
-)
+		category="OBS Studio",
+		# Translators: Descripción del elemento en el diálogo gestos de entrada
+		description= _('Pulsa el botón ajustes'),
+		gesture="kb:control+a"
+	)
 	def script_ajustes(self, gesture):
 		self. buttonSelect(3)
 
 	@script(
-category="OBS Studio",
-description="Pulsa el botón pausar grabación",
-gesture="kb:control+p"
-)
+		category="OBS Studio",
+		# Translators: Descripción del elemento en el diálogo gestos de entrada
+		description= _('Pulsa el botón pausar grabación'),
+		gesture="kb:control+p"
+	)
 	def script_pausar(self, gesture):
 		self. buttonSelect(6)
 
@@ -77,13 +82,14 @@ gesture="kb:control+p"
 			obj = self.fg.lastChild.children[0].children[button]
 			obj.doAction()
 			Thread(target=self.mute, args=(obj.name,)).start()
-		except IndexError:
+		except (IndexError, AttributeError):
 			pass
 
 	@script(
 		category="OBS Studio",
-		description="Selecciona la fuente según su órden  de posición",
-		gestures=[f"kb:{i}" for i in range(0, 10)]
+		# Translators: Descripción del elemento en el diálogo gestos de entrada
+		description= _('Selecciona la fuente según su órden  de posición'),
+		gestures=[f"kb:control+{i}" for i in range(0, 10)]
 	)
 	def script_fuente(self, gesture):
 		x = int(gesture.mainKeyName) - 1
@@ -95,11 +101,13 @@ gesture="kb:control+p"
 			winUser.mouse_event(winUser.MOUSEEVENTF_LEFTUP,0,0,None,None)
 			Thread(target=self.mute, args=(obj.name,)).start()
 		except IndexError:
-			msg("Sin fuente asignada")
+			# Translators: Anuncia que no hay fuentes seleccionadas
+			message(_('Sin fuente asignada'))
 
 	@script(
 		category="OBS Studio",
-		description="Crea una nueva fuente",
+		# Translators: Descripción del elemento en el diálogo gestos de entrada
+		description= _('Crea una nueva fuente'),
 		gesture="kb:control+n"
 	)
 	def script_nuevaFuente(self, gesture):
@@ -115,8 +123,9 @@ gesture="kb:control+p"
 
 	@script(
 		category="OBS Studio",
-		description="Enfoca la fuente de audio según su número de órden",
-		gestures=[f"kb:control+{i}" for i in range(0, 10)]
+		# Translators: Descripción del elemento en el diálogo gestos de entrada
+		description= _('Enfoca la fuente de audio según su número de órden'),
+		gestures=[f"kb:control+shift+{i}" for i in range(0, 10)]
 	)
 	def script_audio(self, gesture):
 		key = int(gesture.mainKeyName) - 1
@@ -125,38 +134,42 @@ gesture="kb:control+p"
 			obj = self.audio.firstChild.firstChild.firstChild.firstChild.firstChild.children[key].firstChild
 			obj.setFocus()
 			Thread(target=self.mute, args=(obj.next.name,)).start()
-		except IndexError:
-			msg("Sin propiedades de audio")
+		except (AttributeError, IndexError):
+			# Translators: Anuncia que no se han encontrado propiedades de audio
+			message(_('Sin propiedades de audio'))
 
 	def mute(self, str):
 		speech.speechMode = speech.speechMode_off
 		sleep(0.1)
 		speech.speechMode = speech.speechMode_talk
-		msg(str)
+		message(str)
 
 	@script(
 		category="OBS Studio",
-		description="Informa el tiempo  grabado",
+		# Translators: Descripción del elemento en el diálogo gestos de entrada
+		description= _('Verbaliza el tiempo  grabado'),
 		gesture="kb:control+shift+r"
 	)
 	def script_statusRecord(self, gesture):
 		self.windowObjects()
 		timeRecord = self.status.children[6].name
-		msg(timeRecord)
+		message(timeRecord)
 
 	@script(
 		category="OBS Studio",
-		description="Informa el tiempo transmitido",
+		# Translators: Descripción del elemento en el diálogo gestos de entrada
+		description= _('Verbaliza el tiempo transmitido'),
 		gesture="kb:control+shift+t"
 	)
 	def script_statusTransmission(self, gesture):
 		self.windowObjects()
 		timeRecord = self.status.children[4].name
-		msg(timeRecord)
+		message(timeRecord)
 
 	@script(
 		category="OBS Studio",
-		description="Enfoca el panel de botones",
+		# Translators: Descripción del elemento en el diálogo gestos de entrada
+		description= _('Enfoca el panel de botones'),
 		gesture="kb:control+tab"
 	)
 	def script_buttonsFocus(self, gesture):

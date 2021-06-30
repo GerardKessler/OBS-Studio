@@ -20,10 +20,10 @@ addon_info = {
 	# Add-on summary, usually the user visible name of the addon.
 	# Translators: Summary for this add-on
 	# to be shown on installation and add-on information found in Add-ons Manager.
-	"addon_summary": _("OBS-Studio"),
+	"addon_summary": _('OBS-Studio'),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-	"addon_description": _("Atajos de teclado para acceder fácilmente a ciertas funciones de la aplicación"),
+	"addon_description": _('Complemento sencillo que pretende facilitar la interacción con algunas funciones del programa añadiendo atajos de teclado, enfoque de elementos y lectura de estados'),
 	# version
 	"addon_version": "0.1",
 	# Author(s)
