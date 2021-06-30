@@ -85,12 +85,7 @@ class AppModule(appModuleHandler.AppModule):
 		except (IndexError, AttributeError):
 			pass
 
-	@script(
-		category="OBS Studio",
-		# Translators: Descripción del elemento en el diálogo gestos de entrada
-		description= _('Selecciona la fuente según su órden  de posición'),
-		gestures=[f"kb:control+{i}" for i in range(0, 10)]
-	)
+	@script(gestures=[f"kb:control+{i}" for i in range(1, 10)])
 	def script_fuente(self, gesture):
 		x = int(gesture.mainKeyName) - 1
 		self.windowObjects()
@@ -121,12 +116,7 @@ class AppModule(appModuleHandler.AppModule):
 		sleep(0.1)
 		self.downArrow.send()
 
-	@script(
-		category="OBS Studio",
-		# Translators: Descripción del elemento en el diálogo gestos de entrada
-		description= _('Enfoca la fuente de audio según su número de órden'),
-		gestures=[f"kb:control+shift+{i}" for i in range(0, 10)]
-	)
+	@script(gestures=[f"kb:control+shift+{i}" for i in range(1, 10)])
 	def script_audio(self, gesture):
 		key = int(gesture.mainKeyName) - 1
 		self.windowObjects()
