@@ -15,7 +15,7 @@ Complemento sencillo que pretende facilitar la interacción con algunas funcione
 * Control + shift + t; verbaliza el tiempo y estado de la transmisión.
 * control + tab; enfoca el panel de botones si es posible
 
-# Fuentes y dispositivos de audio:
+## Fuentes y dispositivos de audio:
 Al enfocar las fuentes con control y los números alfanuméricos podremos utilizar:  
 
 * Suprimir; para abrir el diálogo de eliminación de fuente.  
