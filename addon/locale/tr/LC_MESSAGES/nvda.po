@@ -1,0 +1,57 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: obs versão 0.1\n"
+"POT-Creation-Date: 2021-07-01 18:52+0100\n"
+"PO-Revision-Date: 2021-07-31 17:51+0300\n"
+"Last-Translator: Umut KORKMAZ <umutkork@gmail.com>\n"
+"Language-Team: Equipa portuguesa do NVDA: Ângelo Abrantes e Rui Fontes\n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"X-Poedit-Basepath: ../../../appModules\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: obs64.py:51
+msgid "Pulsa el botón Iniciar transmisión"
+msgstr "Akışı Başlat düğmesine basın"
+
+#: obs64.py:60
+msgid "Pulsa el botón Iniciar grabación"
+msgstr "Kaydı başlat düğmesine basın"
+
+#: obs64.py:69
+msgid "Pulsa el botón ajustes"
+msgstr "Ayarlar düğmesine basın"
+
+#: obs64.py:78
+msgid "Pulsa el botón pausar grabación"
+msgstr "Kaydı duraklat düğmesine basın"
+
+#: obs64.py:104
+msgid "Sin fuente asignada"
+msgstr "Kaynak atanmadı"
+
+#: obs64.py:109
+msgid "Crea una nueva fuente"
+msgstr "Yeni bir Sahne oluştur"
+
+#: obs64.py:133
+msgid "Sin propiedades de audio"
+msgstr "Ses özelliği yok"
+
+#: obs64.py:144
+msgid "Verbaliza el tiempo  grabado"
+msgstr "Kaydedilen zamanı sözlü olarak ifade Et"
+
+#: obs64.py:158
+msgid "Verbaliza el tiempo transmitido"
+msgstr "Akış zamanını sözlü olarak ifade et"
+
+#: obs64.py:172
+msgid "Enfoca el panel de botones si es posible"
+msgstr "Mümkünse düğme paneline odaklanın"
+
