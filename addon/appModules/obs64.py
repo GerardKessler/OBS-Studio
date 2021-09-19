@@ -5,7 +5,6 @@
 import appModuleHandler
 from scriptHandler import script
 import api
-import controlTypes
 from time import sleep
 import winUser
 from ui import message
@@ -17,23 +16,39 @@ import addonHandler
 # Lína de traducción
 addonHandler.initTranslation()
 
+def speak(str, time):
+	if hasattr(speech, "SpeechMode"):
+		speech.setSpeechMode(speech.SpeechMode.off)
+		sleep(time)
+		speech.setSpeechMode(speech.SpeechMode.talk)
+	else:
+		speech.speechMode = speech.speechMode_off
+		sleep(time)
+		speech.speechMode = speech.speechMode_talk
+	if str != None:
+		sleep(0.1)
+		message(str)
+
 class AppModule(appModuleHandler.AppModule):
 
-	fg = ""
-	sources = ""
-	audio = ""
-	status = ""
-	appsKey = KeyboardInputGesture.fromName("applications")
-	downArrow = KeyboardInputGesture.fromName("downArrow")
-	tab = KeyboardInputGesture.fromName("tab")
 	category = "OBS Studio"
 
-	def event_NVDAObject_init(self, obj):
-		self.fg = api.getForegroundObject()
+	def __init__(self, *args, **kwargs):
+		super(AppModule, self).__init__(*args, **kwargs)
+		self.fg = ""
+		self.sources = ""
+		self.audio = ""
+		self.status = ""
+		self.appsKey = KeyboardInputGesture.fromName("applications")
+		self.downArrow = KeyboardInputGesture.fromName("downArrow")
+		self.tab = KeyboardInputGesture.fromName("tab")
+		self.windowObjects()
 
 	def windowObjects(self):
 		if self.sources == "":
-			self.tab.send()
+			self.fg = api.getForegroundObject()
+			for k in range(5):
+				self.tab.send()
 			try:
 				for child in self.fg.children:
 					if child.UIAAutomationId == 'OBSBasic.sourcesDock':
@@ -84,8 +99,10 @@ class AppModule(appModuleHandler.AppModule):
 	def buttonSelect(self, button):
 		try:
 			obj = self.fg.lastChild.children[0].children[button]
+			message(obj.name)
+			sleep(0.1)
 			obj.doAction()
-			Thread(target=self.mute, args=(obj.name,)).start()
+			Thread(target=speak, args=(None, 0.3), daemon= True).start()
 		except (IndexError, AttributeError):
 			pass
 
@@ -96,9 +113,11 @@ class AppModule(appModuleHandler.AppModule):
 		try:
 			obj = self.sources.children[0].children[0].children[0].children[x]
 			api.moveMouseToNVDAObject(obj)
+			message(obj.name)
+			sleep(0.1)
 			winUser.mouse_event(winUser.MOUSEEVENTF_LEFTDOWN,0,0,None,None)
 			winUser.mouse_event(winUser.MOUSEEVENTF_LEFTUP,0,0,None,None)
-			Thread(target=self.mute, args=(obj.name,)).start()
+			Thread(target=speak, args=(None, 0.2), daemon= True).start()
 		except (IndexError, AttributeError):
 			# Translators: Anuncia que no hay fuentes seleccionadas
 			message(_('Sin fuente asignada'))
@@ -112,6 +131,8 @@ class AppModule(appModuleHandler.AppModule):
 	def script_nuevaFuente(self, gesture):
 		self.windowObjects()
 		add = self.sources.firstChild.firstChild.firstChild.next.firstChild
+		message(add.name)
+		sleep(0.1)
 		api.moveMouseToNVDAObject(add)
 		winUser.mouse_event(winUser.MOUSEEVENTF_LEFTDOWN,0,0,None,None)
 		winUser.mouse_event(winUser.MOUSEEVENTF_LEFTUP,0,0,None,None)
@@ -126,17 +147,13 @@ class AppModule(appModuleHandler.AppModule):
 		self.windowObjects()
 		try:
 			obj = self.audio.firstChild.firstChild.firstChild.firstChild.firstChild.children[key].firstChild
+			message(obj.next.name)
+			sleep(0.1)
 			obj.setFocus()
-			Thread(target=self.mute, args=(obj.next.name,)).start()
+			Thread(target=speak, args=(None, 0.2), daemon= True).start()
 		except (AttributeError, IndexError):
 			# Translators: Anuncia que no se han encontrado propiedades de audio
 			message(_('Sin propiedades de audio'))
-
-	def mute(self, str):
-		speech.speechMode = speech.speechMode_off
-		sleep(0.1)
-		speech.speechMode = speech.speechMode_talk
-		message(str)
 
 	@script(
 		category=category,
