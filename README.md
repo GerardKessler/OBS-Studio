@@ -13,7 +13,7 @@ Complemento sencillo que pretende facilitar la interacción con algunas funcione
 * Control + a; abre los ajustes del programa.
 * Control + shift + r; verbaliza el tiempo y estado de la grabación.
 * Control + shift + t; verbaliza el tiempo y estado de la transmisión.
-* control + tab; enfoca el panel de botones si es posible
+* f4; Abre en el explorador la carpeta con los archivos grabados.
 
 ## Fuentes y dispositivos de audio:
 Al enfocar las fuentes con control y los números alfanuméricos podremos utilizar:  

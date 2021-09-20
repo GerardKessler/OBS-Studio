@@ -27,7 +27,7 @@ Klavye kısayolları, öğe odağı ve durum okumaları ekleyerek programın baz
   *  Control + a; program ayarlarını açar.
   *  Control + shift + r; kaydın zamanını ve durumunu Seslendirir.
   *  Control + shift + t; Yayının zamanını ve durumunu seslendirir.
-  *  control + tab; mümkünse düğme paneline odaklanır.
+  * f4; Gezginde kayıtlı dosyaların bulunduğu klasörü açın. 
 
 ## Ses kaynakları ve cihazlar:
 

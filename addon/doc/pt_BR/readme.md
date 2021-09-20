@@ -13,7 +13,7 @@ Complemento simples que visa facilitar a interacção com algumas funções do p
 * Controlo+A; Abre as configurações do programa.
 * Controlo+Shift+R; Verbaliza o tempo e o estado da gravação.
 * Controlo+Shift+T; Verbaliza o tempo e o estado da transmissão.
-* Controlo+tab; vai para o painel de botões, se possível
+* f4; Abra a pasta com os arquivos gravados no explorer. 
 
 ## Fontes e dispositivos de áudio:
 Ao focar as fontes com controle e números alfanuméricos, podemos usar:
