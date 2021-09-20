@@ -1,8 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: obs versão 0.1\n"
-"POT-Creation-Date: 2021-07-01 18:52+0100\n"
-"PO-Revision-Date: 2021-07-01 18:57+0100\n"
+"Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
+"POT-Creation-Date: 2021-09-20 09:07-0300\n"
+"PO-Revision-Date: 2021-09-20 09:10-0300\n"
 "Last-Translator: Ângelo Abrantes <ampa4374@gmail.com>\n"
 "Language-Team: Equipa portuguesa do NVDA: Ângelo Abrantes e Rui Fontes\n"
 "Language: pt_PT\n"
@@ -15,42 +16,72 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: obs64.py:51
+#: addon\appModules\obs64.py:66
+msgid "Mostrar Grabaciones"
+msgstr "Mostrar gravações"
+
+#. Translators: Descripción del elemento en el diálogo gestos de entrada
+#: addon\appModules\obs64.py:78
 msgid "Pulsa el botón Iniciar transmisión"
 msgstr "Pressionar o botão Iniciar Transmissão"
 
-#: obs64.py:60
+#. Translators: Descripción del elemento en el diálogo gestos de entrada
+#: addon\appModules\obs64.py:87
 msgid "Pulsa el botón Iniciar grabación"
 msgstr "Pressionar o botão Iniciar gravação"
 
-#: obs64.py:69
+#. Translators: Descripción del elemento en el diálogo gestos de entrada
+#: addon\appModules\obs64.py:96
 msgid "Pulsa el botón ajustes"
 msgstr "Pressionar o botão Definições"
 
-#: obs64.py:78
+#. Translators: Descripción del elemento en el diálogo gestos de entrada
+#: addon\appModules\obs64.py:105
 msgid "Pulsa el botón pausar grabación"
 msgstr "Pressionar o botão pausar gravação"
 
-#: obs64.py:104
+#. Translators: Anuncia que no hay fuentes seleccionadas
+#: addon\appModules\obs64.py:135
 msgid "Sin fuente asignada"
 msgstr "Nenhuma fonte atribuída"
 
-#: obs64.py:109
+#. Translators: Descripción del elemento en el diálogo gestos de entrada
+#: addon\appModules\obs64.py:140
 msgid "Crea una nueva fuente"
 msgstr "Criar uma nova fonte"
 
-#: obs64.py:133
+#. Translators: Anuncia que no se han encontrado propiedades de audio
+#: addon\appModules\obs64.py:168
 msgid "Sin propiedades de audio"
 msgstr "Sem propriedades de áudio"
 
-#: obs64.py:144
+#. Translators: Descripción del elemento en el diálogo gestos de entrada
+#: addon\appModules\obs64.py:173
 msgid "Verbaliza el tiempo  grabado"
 msgstr "Verbaliza o tempo gravado"
 
-#: obs64.py:158
+#. Translators: Descripción del elemento en el diálogo gestos de entrada
+#: addon\appModules\obs64.py:187
 msgid "Verbaliza el tiempo transmitido"
 msgstr "Verbaliza o tempo transmitido"
 
-#: obs64.py:172
+#. Translators: Descripción del elemento en el diálogo gestos de entrada
+#: addon\appModules\obs64.py:201
 msgid "Enfoca el panel de botones si es posible"
 msgstr "Vai para o painel de botões, se possível"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
+#: buildVars.py:23
+msgid "OBS-Studio"
+msgstr ""
+
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+#: buildVars.py:26
+msgid ""
+"Complemento sencillo que pretende facilitar la interacción con algunas "
+"funciones del programa añadiendo atajos de teclado, enfoque de elementos y "
+"lectura de estados"
+msgstr ""
