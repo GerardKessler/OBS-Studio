@@ -25,7 +25,7 @@ addon_info = {
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 	"addon_description": _('Complemento sencillo que pretende facilitar la interacción con algunas funciones del programa añadiendo atajos de teclado, enfoque de elementos y lectura de estados'),
 	# version
-	"addon_version": "0.2",
+	"addon_version": "0.3",
 	# Author(s)
 	"addon_author": "Gerardo Kessler <ReaperYOtrasYerbas@gmail.com>",
 	# URL for the add-on documentation support
