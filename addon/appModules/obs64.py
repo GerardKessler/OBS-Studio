@@ -40,9 +40,16 @@ class AppModule(appModuleHandler.AppModule):
 		self.appsKey = KeyboardInputGesture.fromName("applications")
 		self.downArrow = KeyboardInputGesture.fromName("downArrow")
 		self.tab = KeyboardInputGesture.fromName("tab")
-		self.windowObjects()
-
+		self.firstRun()
 	category = "OBS Studio"
+
+	def firstRun(self):
+		Thread(target=self.assignFunctions, daemon= True).start()
+
+	def assignFunctions(self):
+		sleep(1)
+		KeyboardInputGesture.fromName("tab").send()
+		self.windowObjects()
 
 	def windowObjects(self):
 		if self.sources == "":
