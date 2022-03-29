@@ -1,17 +1,3 @@
----
-autonumber-headings: true
-extratags: true
-extratags-back: true
-filename: OBS-Studio
-lang: tr
-mathjax: false
-path: '%USERPROFILE%\documents'
-template: default
-timeGen: 1.018 s
-title: OBS-Studio
-toc: false
-...
-
 # OBS-Studio
 
 Klavye kısayolları, öğe odağı ve durum okumaları ekleyerek programın bazı işlevleriyle etkileşimi kolaylaştırmayı amaçlayan basit eklenti.
