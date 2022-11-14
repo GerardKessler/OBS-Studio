@@ -16,66 +16,71 @@ import addonHandler
 # Lína de traducción
 addonHandler.initTranslation()
 
-def speak(str, time):
-	if hasattr(speech, "SpeechMode"):
-		speech.setSpeechMode(speech.SpeechMode.off)
-		sleep(time)
-		speech.setSpeechMode(speech.SpeechMode.talk)
-	else:
-		speech.speechMode = speech.speechMode_off
-		sleep(time)
-		speech.speechMode = speech.speechMode_talk
-	if str != None:
+# Función para romper la cadena de verbalización y callar al sintetizador durante el tiempo especificado
+def mute(time, msg= False):
+	if msg:
+		message(msg)
 		sleep(0.1)
-		message(str)
+	Thread(target=killSpeak, args=(time,), daemon= True).start()
+
+def killSpeak(time):
+	if speech.getState().speechMode == speech.SpeechMode.off: return
+	speech.setSpeechMode(speech.SpeechMode.off)
+	sleep(time)
+	speech.setSpeechMode(speech.SpeechMode.talk)
 
 class AppModule(appModuleHandler.AppModule):
 
-	def __init__(self, *args, **kwargs):
-		super(AppModule, self).__init__(*args, **kwargs)
-		self.fg = ""
-		self.sources = ""
-		self.audio = ""
-		self.status = ""
-		self.appsKey = KeyboardInputGesture.fromName("applications")
-		self.downArrow = KeyboardInputGesture.fromName("downArrow")
-		self.tab = KeyboardInputGesture.fromName("tab")
-		self.firstRun()
 	category = "OBS Studio"
 
-	def firstRun(self):
-		Thread(target=self.assignFunctions, daemon= True).start()
+	def __init__(self, *args, **kwargs):
+		super(AppModule, self).__init__(*args, **kwargs)
+		self.fg = None
+		self.controls = None
+		self.sources = None
+		self.audio = None
+		self.status = None
+		self.appsKey = KeyboardInputGesture.fromName("applications")
+		self.downArrow = KeyboardInputGesture.fromName("downArrow")
+		# Translators: Mensaje de no encontrado
+		self.notFound = _('No encontrado')
 
-	def assignFunctions(self):
-		sleep(1)
-		KeyboardInputGesture.fromName("tab").send()
-		self.windowObjects()
+	def pressControl(self, id):
+		if not self.controls: self.windowObjects()
+		for control in reversed(self.controls.firstChild.children):
+			try:
+				if control.UIAAutomationId == id:
+					mute(0.5, control.name)
+					control.doAction()
+					return False
+			except (IndexError, AttributeError):
+				pass
+		return True
 
 	def windowObjects(self):
-		if self.sources == "":
+		if not self.fg:
 			self.fg = api.getForegroundObject()
-			for k in range(5):
-				self.tab.send()
+		for child in self.fg.children:
 			try:
-				for child in self.fg.children:
-					if child.UIAAutomationId == 'OBSBasic.sourcesDock':
-						self.sources = child
-					elif child.UIAAutomationId == 'OBSBasic.mixerDock':
-						self.audio = child
-					elif child.UIAAutomationId == 'OBSBasic.statusbar':
-						self.status = child
+				if child.UIAAutomationId == 'OBSBasic.controlsDock':
+					self.controls = child
+				elif child.UIAAutomationId == 'OBSBasic.sourcesDock':
+					self.sources = child
+				elif child.UIAAutomationId == 'OBSBasic.mixerDock':
+					self.audio = child
+				elif child.UIAAutomationId == 'OBSBasic.statusbar':
+					self.status = child
 			except AttributeError:
 				pass
 
 	@script(gesture="kb:f4")
 	def script_openVideosFolder(self, gesture):
 		try:
-			message(_('Mostrar Grabaciones'))
-			sleep(0.5)
-			Thread(target=speak, args=(None, 0.5), daemon= True).start()
+			# Translators: Mensaje de la opción mostrar ggrabaciones
+			mute(0.1, _('Mostrar Grabaciones'))
 			KeyboardInputGesture.fromName("alt+f").send()
+			mute(0.2)
 			KeyboardInputGesture.fromName("enter").send()
-			Thread(target=speak, args=(None, 0.1), daemon=True).start()
 		except:
 			pass
 
@@ -86,7 +91,8 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+t"
 	)
 	def script_transmision(self, gesture):
-		self.buttonSelect(0)
+		if self.pressControl('OBSBasic.controlsDock.controlsDockContents.streamButton'):
+			message(self.notFound)
 
 	@script(
 		category=category,
@@ -95,7 +101,8 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+r"
 	)
 	def script_grabacion(self, gesture):
-		self.buttonSelect(1)
+		if self.pressControl('OBSBasic.controlsDock.controlsDockContents.recordButton'):
+			message(self.notFound)
 
 	@script(
 		category=category,
@@ -104,7 +111,8 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+a"
 	)
 	def script_ajustes(self, gesture):
-		self.buttonSelect(3)
+		if self.pressControl('OBSBasic.controlsDock.controlsDockContents.settingsButton'):
+			message(self.notFound)
 
 	@script(
 		category=category,
@@ -113,30 +121,20 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+p"
 	)
 	def script_pausar(self, gesture):
-		self.buttonSelect(6)
-
-	def buttonSelect(self, button):
-		try:
-			obj = self.fg.lastChild.children[0].children[button]
-			message(obj.name)
-			sleep(0.1)
-			obj.doAction()
-			Thread(target=speak, args=(None, 0.3), daemon= True).start()
-		except (IndexError, AttributeError):
-			pass
+		if self.pressControl(''):
+			message(self.notFound)
 
 	@script(gestures=[f"kb:control+{i}" for i in range(1, 10)])
 	def script_fuente(self, gesture):
 		x = int(gesture.mainKeyName) - 1
-		self.windowObjects()
+		if not self.audio: self.windowObjects()
 		try:
-			obj = self.sources.children[0].children[0].children[0].children[x]
+			obj = self.sources.firstChild.firstChild.firstChild.children[x]
 			api.moveMouseToNVDAObject(obj)
-			message(obj.name)
-			sleep(0.1)
+			mute(0.2, obj.name)
 			winUser.mouse_event(winUser.MOUSEEVENTF_LEFTDOWN,0,0,None,None)
 			winUser.mouse_event(winUser.MOUSEEVENTF_LEFTUP,0,0,None,None)
-			Thread(target=speak, args=(None, 0.2), daemon= True).start()
+			mute(0.3)
 		except (IndexError, AttributeError):
 			# Translators: Anuncia que no hay fuentes seleccionadas
 			message(_('Sin fuente asignada'))
@@ -148,10 +146,9 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+n"
 	)
 	def script_nuevaFuente(self, gesture):
-		self.windowObjects()
+		if not self.sources: self.windowObjects()
 		add = self.sources.firstChild.firstChild.firstChild.next.firstChild
-		message(add.name)
-		sleep(0.1)
+		mute(0.1, add.name)
 		api.moveMouseToNVDAObject(add)
 		winUser.mouse_event(winUser.MOUSEEVENTF_LEFTDOWN,0,0,None,None)
 		winUser.mouse_event(winUser.MOUSEEVENTF_LEFTUP,0,0,None,None)
@@ -163,13 +160,11 @@ class AppModule(appModuleHandler.AppModule):
 	@script(gestures=[f"kb:control+shift+{i}" for i in range(1, 10)])
 	def script_audio(self, gesture):
 		key = int(gesture.mainKeyName) - 1
-		self.windowObjects()
+		if not self.audio: self.windowObjects()
 		try:
-			obj = self.audio.firstChild.firstChild.firstChild.firstChild.firstChild.children[key].firstChild
-			message(obj.next.name)
-			sleep(0.1)
+			obj = self.audio.firstChild.firstChild.firstChild.firstChild.firstChild.firstChild.children[key].firstChild
+			mute(0.1, obj.next.name)
 			obj.setFocus()
-			Thread(target=speak, args=(None, 0.2), daemon= True).start()
 		except (AttributeError, IndexError):
 			# Translators: Anuncia que no se han encontrado propiedades de audio
 			message(_('Sin propiedades de audio'))
@@ -181,7 +176,7 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+shift+r"
 	)
 	def script_statusRecord(self, gesture):
-		self.windowObjects()
+		if not self.status: self.windowObjects()
 		try:
 			timeRecord = self.status.children[6].name
 			message(timeRecord)
@@ -195,21 +190,9 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+shift+t"
 	)
 	def script_statusTransmission(self, gesture):
-		self.windowObjects()
+		if not self.status: self.windowObjects()
 		try:
 			timeRecord = self.status.children[4].name
 			message(timeRecord)
 		except AttributeError:
-			pass
-
-	@script(
-		category=category,
-		# Translators: Descripción del elemento en el diálogo gestos de entrada
-		description= _('Enfoca el panel de botones si es posible'),
-		gesture="kb:control+tab"
-	)
-	def script_buttonsFocus(self, gesture):
-		try:
-			self.fg.lastChild.firstChild.firstChild.setFocus()
-		except (AttributeError, IndexError):
 			pass

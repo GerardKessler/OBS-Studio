@@ -1,6 +1,6 @@
 # OBS-Studio
 
-Complemento sencillo que pretende facilitar la interacción con algunas funciones del programa añadiendo atajos de teclado, enfoque de elementos y lecturas de estado.
+Pequeño módulo  que añade atajos de teclado, enfoque de elementos y lecturas de estado.
 
 ## Comandos del complemento:
 
@@ -26,9 +26,13 @@ En el caso de los dispositivos de audio que se enfocan con el atajo control + sh
 * Aplicaciones; para abrir el menú contextual del dispositivo.
 
 ### Nota:
-Según la configuración que se haya realizado en las opciones ver puede que los objetos se distribuyan de diferente forma, lo que resultaría en el mal funcionamiento del complemento.  
-En tal caso podremos volver a la configuración por defecto con los siguientes pasos:  
- Con el programa abierto abrir la barra de menú con alt y activar la opción "Mostrar carpeta de configuración", que se encuentra  en el apartado archivo.  
- Antes de eliminar todos los archivos de esta carpeta es conveniente cerrar el programa para que los mismos no estén en uso.  
- Al vover a ejecutar el programa se va a activar el asistente de primera configuración, y los objetos de la interfaz estarán en su lugar por defecto.  
-Si al abrir el programa los atajos no funcionan, tabular en la interfaz o volver a enfocar la ventana con alt tabulador debería solucionarlo.
+
+Según la configuración que se haya realizado en las opciones del apartado ver puede que los objetos se distribuyan de diferente forma, lo que redundaría en un mal funcionamiento del complemento.
+
+Para volver a la configuración por defecto, podemos seguir los pasos siguientes:
+ 
+1. Con el programa abierto abrir la barra de menú con alt y activar la opción "Mostrar carpeta de configuración", que se encuentra  en el apartado archivo
+2. Cerrar el programa para que no haya conflictos con archivos en uso
+3. Eliminar todo el contenido de la carpeta
+
+Al vover a ejecutar el programa se va a activar el asistente de primera configuración, y los objetos de la interfaz estarán en su lugar por defecto.  
