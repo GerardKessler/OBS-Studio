@@ -16,6 +16,7 @@ Pequeño módulo  que añade atajos de teclado, enfoque de elementos y lecturas 
 * f4; Abre en el explorador la carpeta con los archivos grabados.
 
 ## Fuentes y dispositivos de audio:
+
 Al enfocar las fuentes con control y los números alfanuméricos podremos utilizar:  
 
 * Suprimir; para abrir el diálogo de eliminación de fuente.  
@@ -30,7 +31,7 @@ En el caso de los dispositivos de audio que se enfocan con el atajo control + sh
 Según la configuración que se haya realizado en las opciones del apartado ver puede que los objetos se distribuyan de diferente forma, lo que redundaría en un mal funcionamiento del complemento.
 
 Para volver a la configuración por defecto, podemos seguir los pasos siguientes:
- 
+
 1. Con el programa abierto abrir la barra de menú con alt y activar la opción "Mostrar carpeta de configuración", que se encuentra  en el apartado archivo
 2. Cerrar el programa para que no haya conflictos con archivos en uso
 3. Eliminar todo el contenido de la carpeta

@@ -11,6 +11,7 @@ from ui import message
 import speech
 from keyboardHandler import KeyboardInputGesture
 from threading import Thread
+import controlTypes
 import addonHandler
 
 # Lína de traducción
@@ -40,10 +41,11 @@ class AppModule(appModuleHandler.AppModule):
 		self.sources = None
 		self.audio = None
 		self.status = None
+		self.recordButton = None
 		self.appsKey = KeyboardInputGesture.fromName("applications")
 		self.downArrow = KeyboardInputGesture.fromName("downArrow")
 		# Translators: Mensaje de no encontrado
-		self.notFound = _('No encontrado')
+		self.notFound = _('Elemento no encontrado')
 
 	def pressControl(self, id):
 		if not self.controls: self.windowObjects()
@@ -52,6 +54,8 @@ class AppModule(appModuleHandler.AppModule):
 				if control.UIAAutomationId == id:
 					mute(0.5, control.name)
 					control.doAction()
+					if control.UIAAutomationId == 'OBSBasic.controlsDock.controlsDockContents.recordButton':
+						self.recordButton = control
 					return False
 			except (IndexError, AttributeError):
 				pass
@@ -121,8 +125,19 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+p"
 	)
 	def script_pausar(self, gesture):
-		if self.pressControl(''):
-			message(self.notFound)
+		if not self.recordButton or controlTypes.State.CHECKED not in self.recordButton.states:
+			# Translators: Mensaje sobre ninguna grabación en curso
+			message(_('Ninguna grabación en curso'))
+		else:
+			try:
+				pause_button = self.controls.firstChild.lastChild
+				if pause_button.role == controlTypes.Role.CHECKBOX and pause_button.UIAAutomationId == '':
+					pause_button.doAction()
+					mute(0.5, pause_button.name)
+				else:
+					message(self.notFound)
+			except:
+				pass
 
 	@script(gestures=[f"kb:control+{i}" for i in range(1, 10)])
 	def script_fuente(self, gesture):
