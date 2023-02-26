@@ -1,6 +1,6 @@
 # OBS-Studio
 
-Pequeño módulo  que añade atajos de teclado, enfoque de elementos y lecturas de estado.
+Autor; [Gerardo Kessler](http://gera.ar)  
 
 ## Comandos del complemento:
 
