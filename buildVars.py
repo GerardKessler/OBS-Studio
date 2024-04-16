@@ -23,9 +23,9 @@ addon_info = {
 	"addon_summary": _('OBS-Studio'),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-	"addon_description": _('Pequeño módulo que añade atajos de teclado, enfoque de elementos y lectura de estados'),
+	"addon_description": _('Pequeño módulo que añade atajos de teclado para el enfoque y activación de elementos y verbalización de estados'),
 	# version
-	"addon_version": "0.8.1",
+	"addon_version": "0.8",
 	# Author(s)
 	"addon_author": "Gerardo Kessler <gera.ar@yahoo.com>",
 	# URL for the add-on documentation support
