@@ -25,7 +25,7 @@ def mute(time, msg= False):
 	Thread(target=killSpeak, args=(time,), daemon= True).start()
 
 def killSpeak(time):
-	if speech.getState().speechMode == speech.SpeechMode.off: return
+	if speech.getState().speechMode != speech.SpeechMode.talk: return
 	speech.setSpeechMode(speech.SpeechMode.off)
 	sleep(time)
 	speech.setSpeechMode(speech.SpeechMode.talk)
@@ -193,10 +193,9 @@ class AppModule(appModuleHandler.AppModule):
 	def script_statusRecord(self, gesture):
 		if not self.status: self.windowObjects()
 		try:
-			timeRecord = self.status.children[6].name
-			message(timeRecord)
+			message(self.status.lastChild.getChild(3).lastChild.name)
 		except AttributeError:
-			pass
+				pass
 
 	@script(
 		category=category,
@@ -207,7 +206,6 @@ class AppModule(appModuleHandler.AppModule):
 	def script_statusTransmission(self, gesture):
 		if not self.status: self.windowObjects()
 		try:
-			timeRecord = self.status.children[4].name
-			message(timeRecord)
+			message(self.status.lastChild.getChild(2).lastChild.name)
 		except AttributeError:
 			pass
