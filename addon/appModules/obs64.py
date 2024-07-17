@@ -1,5 +1,5 @@
 ﻿# -*- coding: utf-8 -*-
-# Copyright (C) 2021 Gerardo Kessler <ReaperYOtrasYerbas@gmail.com>
+# Copyright (C) 2024 Gerardo Kessler <gera.ar@yahoo.com>
 # This file is covered by the GNU General Public License.
 
 import appModuleHandler
@@ -49,33 +49,22 @@ class AppModule(appModuleHandler.AppModule):
 
 	def pressControl(self, id):
 		if not self.controls: self.windowObjects()
-		for control in reversed(self.controls.firstChild.children):
-			try:
-				if control.UIAAutomationId == id:
-					mute(0.5, control.name)
-					control.doAction()
-					if control.UIAAutomationId == 'OBSBasic.controlsDock.controlsDockContents.recordButton':
-						self.recordButton = control
-					return False
-			except (IndexError, AttributeError):
-				pass
+		for control in reversed(self.controls.firstChild.firstChild.children):
+			if not hasattr(control, 'UIAAutomationId'): continue
+			if control.UIAAutomationId == id:
+				mute(0.5, control.name)
+				control.doAction()
+				return False
 		return True
 
 	def windowObjects(self):
-		if not self.fg:
-			self.fg = api.getForegroundObject()
+		if not self.fg: self.fg = api.getForegroundObject()
 		for child in self.fg.children:
-			try:
-				if child.UIAAutomationId == 'OBSBasic.controlsDock':
-					self.controls = child
-				elif child.UIAAutomationId == 'OBSBasic.sourcesDock':
-					self.sources = child
-				elif child.UIAAutomationId == 'OBSBasic.mixerDock':
-					self.audio = child
-				elif child.UIAAutomationId == 'OBSBasic.statusbar':
-					self.status = child
-			except AttributeError:
-				pass
+			if not hasattr(child, 'UIAAutomationId'): continue
+			if child.UIAAutomationId == 'OBSBasic.controlsDock': self.controls = child
+			elif child.UIAAutomationId == 'OBSBasic.sourcesDock': self.sources = child
+			elif child.UIAAutomationId == 'OBSBasic.mixerDock': self.audio = child
+			elif child.UIAAutomationId == 'OBSBasic.statusbar': self.status = child
 
 	@script(gesture="kb:f4")
 	def script_openVideosFolder(self, gesture):
@@ -95,7 +84,7 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+t"
 	)
 	def script_transmision(self, gesture):
-		if self.pressControl('OBSBasic.controlsDock.controlsDockContents.streamButton'):
+		if self.pressControl('OBSBasic.controlsDock.OBSBasicControls.controlsFrame.streamButton'):
 			message(self.notFound)
 
 	@script(
@@ -105,7 +94,7 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+r"
 	)
 	def script_grabacion(self, gesture):
-		if self.pressControl('OBSBasic.controlsDock.controlsDockContents.recordButton'):
+		if self.pressControl('OBSBasic.controlsDock.OBSBasicControls.controlsFrame.recordButton'):
 			message(self.notFound)
 
 	@script(
@@ -115,7 +104,7 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+a"
 	)
 	def script_ajustes(self, gesture):
-		if self.pressControl('OBSBasic.controlsDock.controlsDockContents.settingsButton'):
+		if self.pressControl('OBSBasic.controlsDock.OBSBasicControls.controlsFrame.settingsButton'):
 			message(self.notFound)
 
 	@script(
@@ -125,19 +114,9 @@ class AppModule(appModuleHandler.AppModule):
 		gesture="kb:control+p"
 	)
 	def script_pausar(self, gesture):
-		if not self.recordButton or controlTypes.State.CHECKED not in self.recordButton.states:
+		if self.pressControl('OBSBasic.controlsDock.OBSBasicControls.controlsFrame.pauseRecordButton'):
 			# Translators: Mensaje sobre ninguna grabación en curso
 			message(_('Ninguna grabación en curso'))
-		else:
-			try:
-				pause_button = self.controls.firstChild.lastChild
-				if pause_button.role == controlTypes.Role.CHECKBOX and pause_button.UIAAutomationId == '':
-					pause_button.doAction()
-					mute(0.5, pause_button.name)
-				else:
-					message(self.notFound)
-			except:
-				pass
 
 	@script(gestures=[f"kb:control+{i}" for i in range(1, 10)])
 	def script_fuente(self, gesture):
